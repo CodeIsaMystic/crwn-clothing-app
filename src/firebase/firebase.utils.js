@@ -83,25 +83,26 @@ export const addCollectionAndDocuments = async (
 }
 
 
-/*
 export const convertCollectionSnapshotToMap = (collections) => {
   const transformedCollection = collections.docs.map((doc) => {
     const { title, items } = doc.data();
- 
+
     return {
+      /*  Javascript render method  */
       routeName: encodeURI(title.toLowerCase()),
       id: doc.id,
       title,
       items
     };
   });
- 
-  return transformedCollection.reduce((accumulator, collection) => {
+
+
+  console.log(transformedCollection);
+  /*return transformedCollection.reduce((accumulator, collection) => {
     accumulator[collection.title.toLowerCase()] = collection;
     return accumulator;
-  }, {});
+  }, {});*/
 };
-*/
 
 
 export const auth = firebase.auth();
