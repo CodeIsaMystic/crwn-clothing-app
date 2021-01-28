@@ -27,15 +27,25 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 
   /* .uid firestore method  */
   const userRef = firestore.doc(`users/${userAuth.uid}`);
+  /*const collectionRef = firestore.collection('users');*/
 
   /* snapshot .get() firestore method  */
   const snapShot = await userRef.get();
+
+
+  /* Log in the collection snapShot users from firebase
+  const collectionSnapshot = await collectionRef.get();
+
+  console.log({ collectionSnapshot });
+  console.log({ collection: collectionSnapshot.docs.map(doc => doc.data()) }); */
+
 
   /*  snapshot .exists firestore method  */
   if (!snapShot.exists) {
     const { displayName, email } = userAuth;
     const createdAt = new Date(); /* Date() js object  */
     try {
+      /* .set() create a new document object if not exists */
       await userRef.set({
         displayName,
         email,
@@ -49,6 +59,50 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 
   return userRef;
 };
+
+
+
+export const addCollectionAndDocuments = async (
+  collectionKey,
+  objectsToAdd
+) => {
+  const collectionRef = firestore.collection(collectionKey);
+  console.log(collectionRef);
+
+
+  const batch = firestore.batch();
+  objectsToAdd.forEach((obj) => {
+    const newDocRef = collectionRef.doc();
+    batch.set(newDocRef, obj);
+
+    /* Log in each document
+    console.log(newDocRef); */
+  });
+
+  return await batch.commit();
+}
+
+
+/*
+export const convertCollectionSnapshotToMap = (collections) => {
+  const transformedCollection = collections.docs.map((doc) => {
+    const { title, items } = doc.data();
+ 
+    return {
+      routeName: encodeURI(title.toLowerCase()),
+      id: doc.id,
+      title,
+      items
+    };
+  });
+ 
+  return transformedCollection.reduce((accumulator, collection) => {
+    accumulator[collection.title.toLowerCase()] = collection;
+    return accumulator;
+  }, {});
+};
+*/
+
 
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
